@@ -31,14 +31,14 @@ async function startTelemetryServer() {
     if (!existsSync(serverPath)) {
         dialog.showErrorBox(
             "DEBUG: Path Error",
-            `File NOT found at:\n${serverPath}`
+            `File NOT found at:\n${serverPath}`,
         );
         return;
     }
 
     try {
         const running = execSync(
-            `tasklist /FI "IMAGENAME eq ${exeName}" /NH`
+            `tasklist /FI "IMAGENAME eq ${exeName}" /NH`,
         ).toString();
         if (running.toLowerCase().includes(exeName.toLowerCase())) return;
     } catch (e) {}
@@ -54,13 +54,13 @@ async function startTelemetryServer() {
     const logPath = path.join(os.homedir(), "Desktop", "truck-nav-debug.txt");
     writeFileSync(
         logPath,
-        `Attempting to launch:\n${psCommand}\n\nPackaged: ${app.isPackaged}`
+        `Attempting to launch:\n${psCommand}\n\nPackaged: ${app.isPackaged}`,
     );
 
     const child = spawn(
         "powershell.exe",
         ["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", psCommand],
-        { shell: true }
+        { shell: true },
     );
 
     child.stderr.on("data", (data) => {
@@ -70,16 +70,27 @@ async function startTelemetryServer() {
     if (isFirstRun) writeFileSync(flagPath, "done");
 }
 
-ipcMain.handle("get-local-ip", () => {
-    const interfaces = os.networkInterfaces();
-    for (const name of Object.keys(interfaces)) {
-        for (const iface of interfaces[name]!) {
-            if (iface.family === "IPv4" && !iface.internal) {
-                return iface.address;
+const dgram = require("dgram");
+ipcMain.handle("get-local-ip", async () => {
+    return new Promise((resolve) => {
+        const socket = dgram.createSocket("udp4");
+
+        socket.connect(53, "8.8.8.8", () => {
+            try {
+                const address = socket.address().address;
+                socket.close();
+                resolve(address);
+            } catch (err) {
+                socket.close();
+                resolve("127.0.0.1");
             }
-        }
-    }
-    return "127.0.0.1";
+        });
+
+        socket.on("error", () => {
+            socket.close();
+            resolve("127.0.0.1");
+        });
+    });
 });
 
 ipcMain.handle("fetch-telemetry", async (_event, ip) => {
@@ -111,7 +122,7 @@ ipcMain.on(
             win.setResizable(true);
             win.maximize();
         }
-    }
+    },
 );
 
 ipcMain.handle("check-server-status", () => {
@@ -119,7 +130,7 @@ ipcMain.handle("check-server-status", () => {
 
     try {
         const runningProcesses = execSync(
-            `tasklist /FI "IMAGENAME eq ${exeName}" /NH`
+            `tasklist /FI "IMAGENAME eq ${exeName}" /NH`,
         ).toString();
 
         return runningProcesses.includes(exeName);
@@ -157,7 +168,7 @@ const capacitorFileConfig: CapacitorElectronConfig =
 const myCapacitorApp = new ElectronCapacitorApp(
     capacitorFileConfig,
     trayMenuTemplate,
-    []
+    [],
 );
 
 // If deeplinking is enabled then we will set it up here.
