@@ -438,7 +438,7 @@ const closeSettingsPanel = () => {
 
                     <div class="warnings">
                         <WarningSlide
-                            :show-if="hasInGameMarker && isRouteActive"
+                            :show-if="hasInGameMarker && !isRouteActive"
                             :reset-on="isRouteActive"
                             text="External Route Detected: Set Waypoint"
                         />
