@@ -477,7 +477,7 @@ const toggleSettingsPanel = () => {
 
             <Transition name="panel-pop">
                 <SettingsPanel
-                    v-if="isSettingsPanelOpened"
+                    v-show="isSettingsPanelOpened"
                     :close-panel="toggleSettingsPanel"
                 />
             </Transition>
