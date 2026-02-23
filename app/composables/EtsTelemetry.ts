@@ -5,9 +5,6 @@ import { getBearing } from "~/assets/utils/geographicMath";
 import { convertTelemtryTime } from "~/assets/utils/helpers";
 import { Capacitor, CapacitorHttp } from "@capacitor/core";
 
-const { isElectron, isMobile, isWeb } = usePlatform();
-const { savedIP } = usePcConnection();
-
 export interface TelemetryUpdate {
     truck: TruckState;
     game: GameState;
@@ -45,49 +42,53 @@ interface JobInfo {
     destinationCompany: string;
 }
 
+const isTelemetryConnected = ref(false);
+const isRunning = ref(false);
+let currentSessionId = 0;
+
+// TRUCK STATE
+const truckState = reactive<TruckState>({
+    truckCoords: [0, 0],
+    truckHeading: 0,
+    truckSpeed: 0,
+});
+
+// GAME STATE
+const gameState = reactive<GameState>({
+    gameTime: "",
+    gameConnected: false,
+    hasInGameMarker: false,
+});
+
+// GAME INFO
+const generalInfo = reactive<GeneralInfo>({
+    fuel: 0,
+    speedLimit: 0,
+    restStoptime: "",
+    restStopMinutes: 0,
+});
+
+// JOB INFO
+const jobInfo = reactive<JobInfo>({
+    hasActiveJob: false,
+    income: 0,
+    deadlineTime: new Date(),
+    remainingTime: new Date(),
+    sourceCity: "0",
+    sourceCompany: "0",
+    destinationCity: "0",
+    destinationCompany: "0",
+});
+
+let lastPosition: [number, number] | null = null;
+let headingOffset = 0;
+
+let fetchTimer: ReturnType<typeof setTimeout> | null = null;
+let abortController: AbortController | null = null;
+
 export function useEtsTelemetry() {
-    const isTelemetryConnected = ref(false);
-    const isRunning = ref(false);
-
-    // TRUCK STATE
-    const truckState = reactive<TruckState>({
-        truckCoords: [0, 0],
-        truckHeading: 0,
-        truckSpeed: 0,
-    });
-
-    // GAME STATE
-    const gameState = reactive<GameState>({
-        gameTime: "",
-        gameConnected: false,
-        hasInGameMarker: false,
-    });
-
-    // GAME INFO
-    const generalInfo = reactive<GeneralInfo>({
-        fuel: 0,
-        speedLimit: 0,
-        restStoptime: "",
-        restStopMinutes: 0,
-    });
-
-    // JOB INFO
-    const jobInfo = reactive<JobInfo>({
-        hasActiveJob: false,
-        income: 0,
-        deadlineTime: new Date(),
-        remainingTime: new Date(),
-        sourceCity: "0",
-        sourceCompany: "0",
-        destinationCity: "0",
-        destinationCompany: "0",
-    });
-
-    let lastPosition: [number, number] | null = null;
-    let headingOffset = 0;
-
-    let fetchTimer: ReturnType<typeof setTimeout> | null = null;
-    let abortController: AbortController | null = null;
+    const { isElectron, isMobile, isWeb } = usePlatform();
+    const { savedIP } = usePcConnection();
 
     function getCorrectHeading(
         rawGameHeading: number,
@@ -125,8 +126,12 @@ export function useEtsTelemetry() {
         if (isRunning.value) return;
         isRunning.value = true;
 
+        currentSessionId++;
+        const mySessionId = currentSessionId;
+
         const loop = async () => {
-            if (!isRunning.value) return;
+            if (!isRunning.value || currentSessionId !== mySessionId) return;
+
             const startTime = performance.now();
 
             try {
@@ -204,13 +209,17 @@ export function useEtsTelemetry() {
 
             const duration = performance.now() - startTime;
             const delay = Math.max(50, 100 - duration);
-            fetchTimer = setTimeout(loop, delay);
+
+            if (isRunning.value && currentSessionId === mySessionId) {
+                fetchTimer = setTimeout(loop, delay);
+            }
         };
         loop();
     }
 
     function stopTelemetry() {
         isRunning.value = false;
+        currentSessionId++;
         if (fetchTimer) clearTimeout(fetchTimer);
         if (abortController) abortController.abort();
         fetchTimer = null;
@@ -342,10 +351,6 @@ export function useEtsTelemetry() {
             });
         }
     }
-
-    onUnmounted(() => {
-        stopTelemetry();
-    });
 
     return {
         ...toRefs(generalInfo),

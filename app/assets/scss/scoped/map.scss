@@ -8,10 +8,10 @@
 
     background-color: #272d39;
     touch-action: none;
+}
 
-    &:focus {
-        outline: none;
-    }
+.map-container * {
+    outline: none !important;
 }
 
 .ui-safe-container {

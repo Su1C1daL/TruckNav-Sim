@@ -40,8 +40,8 @@ onMounted(() => {
         <!-- TODO (after Capacitor build): If the camera is locked, add the class .is-smooth -->
         <div ref="markerElement" class="truck-marker">
             <svg
-                width="48"
-                height="48"
+                width="40"
+                height="40"
                 viewBox="0 0 100 100"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
