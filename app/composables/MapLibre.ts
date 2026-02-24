@@ -16,7 +16,7 @@ export async function initializeMap(
     maplibregl.addProtocol("pmtiles", protocol.tile);
 
     async function loadPmtiles(fileName: string, key: string) {
-        const url = `${window.location.origin}/map-data/tiles/${fileName}.mp3`;
+        const url = `${window.location.origin}/data/ets2/map-data/tiles/${fileName}.mp3`;
 
         try {
             const response = await fetch(url);

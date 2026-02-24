@@ -39,7 +39,7 @@ onMounted(() => {
     window.addEventListener("resize", updateSystemBars);
 
     if (isWeb.value) {
-        currentView.value = "map";
+        currentView.value = "chooseGame";
     } else if (isElectron.value) {
         currentView.value = "desktopHome";
     } else if (isMobile.value) {
@@ -55,6 +55,14 @@ const launchMap = () => {
     currentView.value = "map";
 };
 
+const launchChooseGame = () => {
+    currentView.value = "chooseGame";
+};
+
+const goToDesktopIndex = () => {
+    currentView.value = "desktopHome";
+};
+
 const goHome = () => {
     if (isElectron.value) currentView.value = "desktopHome";
     if (isMobile.value) currentView.value = "mobileHome";
@@ -62,13 +70,29 @@ const goHome = () => {
 </script>
 
 <template>
-    <DesktopIndex
-        v-if="currentView === 'desktopHome'"
-        :launch-map="launchMap"
-    />
-    <MobileIndex
-        v-if="currentView === 'mobileHome'"
-        @connected="currentView = 'map'"
-    />
-    <LazyMap v-if="currentView === 'map'" :goHome="goHome" />
+    <Transition name="page-fade">
+        <DesktopIndex
+            v-if="currentView === 'desktopHome'"
+            :launch-choose-game="launchChooseGame"
+        />
+    </Transition>
+
+    <Transition name="page-fade">
+        <ChooseGame
+            v-if="currentView === 'chooseGame'"
+            :launch-map="launchMap"
+            :go-to-desktop-index="goToDesktopIndex"
+        />
+    </Transition>
+
+    <Transition name="page-fade">
+        <MobileIndex
+            v-if="currentView === 'mobileHome'"
+            @connected="currentView = 'map'"
+        />
+    </Transition>
+
+    <Transition name="page-fade">
+        <LazyMap v-if="currentView === 'map'" :goHome="goHome" />
+    </Transition>
 </template>

@@ -5,6 +5,7 @@ export interface AppSettingsState {
     routeColor: string;
     ownedDlcs: number[];
     lastDestination: [number, number] | null;
+    selectedGame: "ats" | "ets2" | null;
 }
 
 const DEFAULT_SETTINGS: AppSettingsState = {
@@ -12,6 +13,7 @@ const DEFAULT_SETTINGS: AppSettingsState = {
     routeColor: "#22d3ee",
     ownedDlcs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     lastDestination: null,
+    selectedGame: null,
 };
 
 const STORAGE_KEY = "truck-nav-settings";

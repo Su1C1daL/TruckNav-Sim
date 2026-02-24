@@ -1,0 +1,20 @@
+export const useGameSelection = () => {
+    const { settings, updateSettings } = useSettings();
+
+    const selectedGame = useState<"ats" | "ets2" | null>(
+        "selected_game_state",
+        () => settings.value.selectedGame,
+    );
+
+    const selectGame = (game: "ats" | "ets2" | null) => {
+        selectedGame.value = game;
+    };
+
+    const commitSelection = () => {
+        if (selectedGame.value) {
+            updateSettings("selectedGame", selectedGame.value);
+        }
+    };
+
+    return { selectedGame, selectGame, commitSelection };
+};

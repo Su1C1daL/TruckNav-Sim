@@ -1,5 +1,4 @@
 import { shallowRef, ref } from "vue";
-import { loadGraph } from "~/assets/utils/clientGraph";
 import { convertGeoToGame } from "~/assets/utils/gameToGeo";
 import {
     getScaleMultiplier,
@@ -51,10 +50,10 @@ export function useCityData() {
         try {
             const [citiesRes, villagesRes, companiesRes, citiesFallbackRes] =
                 await Promise.all([
-                    fetch("/map-data/ets2-cities.geojson"),
-                    fetch("/map-data/ets2-villages.geojson"),
-                    fetch("/map-data/ets2-companies.geojson"),
-                    fetch("/map-data/citiesCheck.json"),
+                    fetch("/data/ets2/map-data/ets2-cities.geojson"),
+                    fetch("/data/ets2/map-data/ets2-villages.geojson"),
+                    fetch("/data/ets2/map-data/ets2-companies.geojson"),
+                    fetch("/data/ets2/map-data/citiesCheck.json"),
                 ]);
 
             if (citiesRes.ok) cityData.value = await citiesRes.json();
@@ -75,45 +74,45 @@ export function useCityData() {
 
     function getScaleForLocation(
         routeGameX: number,
-        routeGameZ: number
+        routeGameZ: number,
     ): number {
         return getScaleMultiplier(
             routeGameX,
             routeGameZ,
-            optimizedCityNodes.value
+            optimizedCityNodes.value,
         );
     }
 
     function findDestinationCoords(
         targetCityName: string,
-        targetCompanyName: string
+        targetCompanyName: string,
     ): [number, number] | null {
         if (!isLoaded.value || !companiesData.value) return null;
 
         let cityCoords = getCityGeoCoordinates(targetCityName);
         if (!cityCoords) {
             console.log(
-                `Primary name failed: ${targetCityName}. Searching for aliases...`
+                `Primary name failed: ${targetCityName}. Searching for aliases...`,
             );
 
             const aliasEntry = citiesFallbackData.value?.find(
                 (c) =>
                     c.FirstName.toLowerCase() ===
                         targetCityName.toLowerCase() ||
-                    c.SecondName.toLowerCase() === targetCityName.toLowerCase()
+                    c.SecondName.toLowerCase() === targetCityName.toLowerCase(),
             );
 
             if (aliasEntry) {
                 if (aliasEntry.SecondName && aliasEntry.SecondName !== "") {
                     console.log(
-                        `Trying SecondName alias: ${aliasEntry.SecondName}`
+                        `Trying SecondName alias: ${aliasEntry.SecondName}`,
                     );
                     cityCoords = getCityGeoCoordinates(aliasEntry.SecondName);
                 }
 
                 if (!cityCoords && aliasEntry.FirstName) {
                     console.log(
-                        `Trying FirstName alias: ${aliasEntry.FirstName}`
+                        `Trying FirstName alias: ${aliasEntry.FirstName}`,
                     );
                     cityCoords = getCityGeoCoordinates(aliasEntry.FirstName);
                 }
@@ -122,7 +121,7 @@ export function useCityData() {
 
         if (!cityCoords) {
             console.log(
-                `City totally not found in geo-data: ${targetCityName}. Manually insert it in citiesCheck.json`
+                `City totally not found in geo-data: ${targetCityName}. Manually insert it in citiesCheck.json`,
             );
             return null;
         }
@@ -181,7 +180,7 @@ export function useCityData() {
             return col.features.find(
                 (f) =>
                     f.properties.name &&
-                    f.properties.name.toLowerCase() === searchName
+                    f.properties.name.toLowerCase() === searchName,
             );
         };
 
@@ -198,11 +197,11 @@ export function useCityData() {
         for (let i = 0; i < pathCoords.length - 1; i++) {
             const point1 = convertGeoToGame(
                 pathCoords[i]![0],
-                pathCoords[i]![1]
+                pathCoords[i]![1],
             );
             const point2 = convertGeoToGame(
                 pathCoords[i + 1]![0],
-                pathCoords[i + 1]![1]
+                pathCoords[i + 1]![1],
             );
 
             const dx = point2[0] - point1[0];
@@ -215,7 +214,7 @@ export function useCityData() {
             const multiplier = getScaleMultiplier(
                 midX,
                 midZ,
-                optimizedCityNodes.value
+                optimizedCityNodes.value,
             );
 
             const segmentKm = (rawSegmentLength * multiplier) / 1000;
@@ -281,7 +280,7 @@ export function useCityData() {
 
         const checkFeatures = (
             collection: GeoJsonCollection | null,
-            type: "city" | "village"
+            type: "city" | "village",
         ) => {
             if (!collection || !collection.features) return;
 
@@ -298,7 +297,7 @@ export function useCityData() {
 
                     if (type === "city") {
                         bestCountry = formatCountryToken(
-                            feature.properties.countryToken
+                            feature.properties.countryToken,
                         );
                     } else {
                         bestCountry = feature.properties.state || "";

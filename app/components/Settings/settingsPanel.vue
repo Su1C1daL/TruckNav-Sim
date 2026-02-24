@@ -49,10 +49,6 @@ const toggleDlcPanel = () => {
                 <p>Owned DLCs</p>
             </div>
             <div class="owned-dlcs">
-                <!-- <p>
-                    {{ settings.ownedDlcs.length }} /
-                    {{ Object.keys(ets2Expansions).length }} Selected
-                </p> -->
                 <button
                     @click.prevent="toggleDlcPanel"
                     class="nav-btn settings-btn default-color"

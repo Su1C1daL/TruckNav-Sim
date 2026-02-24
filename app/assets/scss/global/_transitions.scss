@@ -1,4 +1,5 @@
 $ease-smooth: cubic-bezier(0.165, 0.84, 0.44, 1);
+$ease-smooth2: cubic-bezier(0, 0, 0.2, 1);
 $ease-pop: cubic-bezier(0.19, 1, 0.22, 1);
 
 /** 1. STANDARD FADE
@@ -17,9 +18,12 @@ $ease-pop: cubic-bezier(0.19, 1, 0.22, 1);
 /** 2. UI LAYER FADE (Faster/Different than standard fade)
  * Usage: <Transition name="ui-layer-fade">
  */
-.ui-layer-fade-enter-active,
+.ui-layer-fade-enter-active {
+    transition: 0s;
+}
+
 .ui-layer-fade-leave-active {
-    transition: 0.2s $ease-smooth;
+    transition: 0.2s $ease-smooth2;
 }
 
 .ui-layer-fade-enter-from,
@@ -110,4 +114,21 @@ $ease-pop: cubic-bezier(0.19, 1, 0.22, 1);
 .compact-slide-leave-to {
     opacity: 0;
     transform: translateX(30%);
+}
+
+/** 8. Page Fade 
+ * Usage: <Transition name="page-fade">
+ */
+
+.page-fade-enter-active {
+    transition: 0.2s $ease-smooth2;
+}
+
+.page-fade-leave-active {
+    transition: 0s;
+}
+
+.page-fade-enter-from,
+.page-fade-leave-to {
+    opacity: 0;
 }

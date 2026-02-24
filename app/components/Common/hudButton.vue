@@ -8,4 +8,8 @@ defineProps<{ onClick: () => void; iconName: string }>();
     </button>
 </template>
 
-<style lang="scss" scoped src="~/assets/scss/scoped/hudButton.scss"></style>
+<style
+    lang="scss"
+    scoped
+    src="~/assets/scss/scoped/Common/hudButton.scss"
+></style>

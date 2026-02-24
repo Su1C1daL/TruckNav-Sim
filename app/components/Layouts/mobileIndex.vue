@@ -2,6 +2,7 @@
 import { CapacitorHttp } from "@capacitor/core";
 
 const { saveIP, loadIP } = usePcConnection();
+const { selectedGame, commitSelection } = useGameSelection();
 
 const ipInput = ref("");
 const isConnecting = ref(false);
@@ -46,6 +47,7 @@ const handleConnect = async () => {
             await saveIP(ipInput.value);
 
             isConnected.value = true;
+            commitSelection();
 
             setTimeout(() => {
                 isConnecting.value = false;
@@ -76,38 +78,51 @@ const handleConnect = async () => {
         </div>
 
         <div class="content">
-            <div class="form-details">
-                <form @submit.prevent="handleConnect" action="">
-                    <label for="ip">IP Address:</label>
-                    <input
-                        id="ip"
-                        v-model="ipInput"
-                        type="text"
-                        name="ip"
-                        placeholder="Type here..."
-                        :disabled="isConnecting"
-                    />
-                </form>
-                <p class="status">
-                    <span v-if="!connectionError">Current Status: &nbsp;</span>
-                    <span :class="isConnected ? 'connected' : 'disconnected'">{{
-                        isConnected ? "Connected" : connectionError
-                    }}</span>
-                </p>
-            </div>
+            <GameSelection v-model="selectedGame" :width="150" />
 
-            <div class="description">
-                <div class="note">
-                    <Icon name="i-majesticons:information-circle-line" />
-                    <p>Note</p>
+            <div class="input-ip">
+                <div class="form-details">
+                    <form @submit.prevent="handleConnect" action="">
+                        <label for="ip">IP Address:</label>
+                        <input
+                            id="ip"
+                            v-model="ipInput"
+                            type="text"
+                            name="ip"
+                            placeholder="Type here..."
+                            :disabled="isConnecting"
+                        />
+                    </form>
+                    <p class="status">
+                        <span v-if="!connectionError"
+                            >Current Status: &nbsp;</span
+                        >
+                        <span
+                            :class="isConnected ? 'connected' : 'disconnected'"
+                            >{{
+                                isConnected ? "Connected" : connectionError
+                            }}</span
+                        >
+                    </p>
                 </div>
-                <p class="description-text">
-                    Enter the IP shown in TruckNav from your computer
-                </p>
+
+                <div class="description">
+                    <div class="note">
+                        <Icon name="i-majesticons:information-circle-line" />
+                        <p>Note</p>
+                    </div>
+                    <p class="description-text">
+                        Enter the IP shown in TruckNav from your computer
+                    </p>
+                </div>
             </div>
         </div>
 
-        <button class="btn" @click="handleConnect" :disabled="isConnecting">
+        <button
+            class="btn"
+            @click="handleConnect"
+            :disabled="isConnecting || !selectedGame"
+        >
             <span>{{ isConnecting ? "Connecting..." : "Connect" }}</span>
             <Icon name="i-fa7-solid:chain" size="20" />
         </button>

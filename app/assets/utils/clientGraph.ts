@@ -7,10 +7,10 @@ const extenstion = Capacitor.isNativePlatform() ? "mp3" : "json";
 
 export async function loadGraph() {
     const [packedNodes, packedEdges] = await Promise.all([
-        fetch(`roadnetwork/nodes.${extenstion}`).then(
+        fetch(`/data/ets2/roadnetwork/nodes.${extenstion}`).then(
             (r) => r.json() as Promise<PackedNode[]>,
         ),
-        fetch(`roadnetwork/edges.${extenstion}`).then(
+        fetch(`/data/ets2/roadnetwork/edges.${extenstion}`).then(
             (r) => r.json() as Promise<PackedEdge[]>,
         ),
     ]);

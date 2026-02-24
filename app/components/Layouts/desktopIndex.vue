@@ -3,7 +3,7 @@ const { fetchIp, localIP } = useNetwork();
 const isServerRunning = ref(false);
 const polling = ref<any>(null);
 
-defineProps<{ launchMap: () => void }>();
+defineProps<{ launchChooseGame: () => void }>();
 
 const checkStatus = async () => {
     const processExists = await (window as any).electronAPI.checkServerStatus();
@@ -20,14 +20,6 @@ const checkStatus = async () => {
     } else {
         isServerRunning.value = false;
     }
-};
-
-const startServer = () => {
-    (window as any).electronAPI.manualStartServer();
-
-    setTimeout(() => {
-        checkStatus();
-    }, 1000);
 };
 
 const startRegularPolling = () => {
@@ -65,7 +57,7 @@ const openLink = async (url: string) => {
 <template>
     <section class="section-device-info">
         <div class="top-tagline">
-            <Icon name="whh:gpsalt" class="icon" size="16" />
+            <Icon name="whh:gpsalt" class="icon" size="20" />
             <span>Your Trucking Companion</span>
         </div>
 
@@ -137,7 +129,7 @@ const openLink = async (url: string) => {
                 </span>
             </div>
 
-            <button @click.prevent="launchMap" class="btn">
+            <button @click.prevent="launchChooseGame" class="btn">
                 <span>Desktop GPS</span>
                 <Icon name="material-symbols:map-rounded" size="20" />
             </button>
