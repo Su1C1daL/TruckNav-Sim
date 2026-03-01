@@ -222,66 +222,66 @@ export const calculateRoute = (
                     } else if (absAngle > 10) {
                         stepCost += 50;
                     }
-                }
 
-                let tempPrev = prevId;
-                let traveledDist = 0;
-                let maxSingleTurn = 0;
+                    let tempPrev = prevId;
+                    let traveledDist = 0;
+                    let maxSingleTurn = 0;
 
-                const currentHeading = getHeading(cLng, cLat, nLng, nLat);
-                let lastSegHeading = currentHeading;
-                let uTurnDist = -1;
+                    const currentHeading = getHeading(cLng, cLat, nLng, nLat);
+                    let lastSegHeading = currentHeading;
+                    let uTurnDist = -1;
 
-                for (let k = 0; k < 30; k++) {
-                    const grandPrev = cache_previous[tempPrev]!;
-                    if (grandPrev === -1) break;
+                    for (let k = 0; k < 30; k++) {
+                        const grandPrev = cache_previous[tempPrev]!;
+                        if (grandPrev === -1) break;
 
-                    const tLng = flatCoords[tempPrev * 2]!;
-                    const tLat = flatCoords[tempPrev * 2 + 1]!;
-                    const gLng = flatCoords[grandPrev * 2]!;
-                    const gLat = flatCoords[grandPrev * 2 + 1]!;
+                        const tLng = flatCoords[tempPrev * 2]!;
+                        const tLat = flatCoords[tempPrev * 2 + 1]!;
+                        const gLng = flatCoords[grandPrev * 2]!;
+                        const gLat = flatCoords[grandPrev * 2 + 1]!;
 
-                    const segDist = fastDistKm(gLng, gLat, tLng, tLat);
-                    traveledDist += segDist;
+                        const segDist = fastDistKm(gLng, gLat, tLng, tLat);
+                        traveledDist += segDist;
 
-                    // Calculate heading of this historical segment
-                    const histHeading = getHeading(gLng, gLat, tLng, tLat);
+                        // Calculate heading of this historical segment
+                        const histHeading = getHeading(gLng, gLat, tLng, tLat);
 
-                    // Track the sharpest individual corner
-                    const turnAngle = getRadianAngleDiff(
-                        histHeading,
-                        lastSegHeading,
-                    );
-                    if (turnAngle > maxSingleTurn) {
-                        maxSingleTurn = turnAngle;
+                        // Track the sharpest individual corner
+                        const turnAngle = getRadianAngleDiff(
+                            histHeading,
+                            lastSegHeading,
+                        );
+                        if (turnAngle > maxSingleTurn) {
+                            maxSingleTurn = turnAngle;
+                        }
+
+                        lastSegHeading = histHeading;
+
+                        // Check how much the overall heading has changed from the past to the future
+                        const diff = getRadianAngleDiff(
+                            histHeading,
+                            currentHeading,
+                        );
+
+                        // If we flipped ~160+ degrees (2.8 rad) AND havent recorded it yet
+                        if (diff > 2.8 && uTurnDist === -1) {
+                            uTurnDist = traveledDist;
+                        }
+
+                        // Looking back a certain distance
+                        if (traveledDist > 0.4) {
+                            break;
+                        }
+
+                        tempPrev = grandPrev;
                     }
 
-                    lastSegHeading = histHeading;
-
-                    // Check how much the overall heading has changed from the past to the future
-                    const diff = getRadianAngleDiff(
-                        histHeading,
-                        currentHeading,
-                    );
-
-                    // If we flipped ~160+ degrees (2.8 rad) AND havent recorded it yet
-                    if (diff > 2.8 && uTurnDist === -1) {
-                        uTurnDist = traveledDist;
-                    }
-
-                    // Looking back a certain distance
-                    if (traveledDist > 0.4) {
-                        break;
-                    }
-
-                    tempPrev = grandPrev;
-                }
-
-                if (uTurnDist !== -1) {
-                    if (maxSingleTurn > 1.2) {
-                        stepCost += Infinity;
-                    } else if (uTurnDist < 0.05) {
-                        stepCost += Infinity;
+                    if (uTurnDist !== -1) {
+                        if (maxSingleTurn > 1.2) {
+                            stepCost += Infinity;
+                        } else if (uTurnDist < 0.05) {
+                            stepCost += Infinity;
+                        }
                     }
                 }
             }

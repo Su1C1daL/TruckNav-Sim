@@ -506,6 +506,7 @@ function createNodesAndEdges(
                     : roadTypeMap[props.roadType as keyof typeof roadTypeMap] ||
                       roadTypeMap[props.type as keyof typeof roadTypeMap] ||
                       0;
+
             if (forwardWeight !== Infinity) {
                 edges.push({
                     from: firstFromPair,
@@ -519,7 +520,7 @@ function createNodesAndEdges(
                 edges.push({
                     from: secondFromPair,
                     to: firstFromPair,
-                    w: Math.round(forwardWeight * 10) / 10,
+                    w: Math.round(backwardWeight * 10) / 10,
                     r: roadTypeValue,
                     dlc: dlcId,
                 });
