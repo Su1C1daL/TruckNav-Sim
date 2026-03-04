@@ -273,7 +273,9 @@ export const useRouteController = (
                 const distKm = Math.sqrt(distSq) * 111;
 
                 const headingPenalty = Math.pow(trueDiff / 90, 2) * 0.1;
-                const score = distKm + headingPenalty;
+                const directionPenalty = isOpposite ? 0.05 : 0;
+
+                const score = distKm + headingPenalty + directionPenalty;
 
                 if (score < minScore) {
                     minScore = score;
