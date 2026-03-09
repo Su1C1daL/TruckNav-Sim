@@ -1,7 +1,4 @@
 <script lang="ts" setup>
-import { computed } from "vue"
-import { useConversions } from "~/composables/UnitConversion"
-
 const props = defineProps<{
     isSheetExpanded: boolean;
     isSheetHidden: boolean;
@@ -15,11 +12,11 @@ const props = defineProps<{
     onStartNavigation: () => void;
 }>();
 
-const { kmToUserUnits, distanceUnit } = useConversions()
+const { kmToUserUnits, distanceUnit } = useUnitConversion();
 
 const routeDistanceConverted = computed(() =>
-    Math.round(kmToUserUnits(props.routeDistance))
-)
+    kmToUserUnits(props.routeDistance),
+);
 
 const emit = defineEmits<{
     (e: "update:isSheetHidden", value: boolean): void;
@@ -72,7 +69,9 @@ function onToggleSheet() {
                 >
                     <Icon name="lets-icons:road-finish-fill" size="22" />
                     <div class="right">
-                        <span>{{ routeDistanceConverted }} {{ distanceUnit }}, </span>
+                        <span
+                            >{{ routeDistanceConverted }} {{ distanceUnit }},
+                        </span>
                         <span>{{ routeEta }}</span>
                     </div>
                 </div>
@@ -84,7 +83,10 @@ function onToggleSheet() {
 
                     <div class="mini-stats">
                         <span class="eta">{{ routeEta }}</span>
-                        <span class="dist">({{ routeDistanceConverted }} {{ distanceUnit }})</span>
+                        <span class="dist"
+                            >({{ routeDistanceConverted }}
+                            {{ distanceUnit }})</span
+                        >
                     </div>
                 </div>
 
@@ -120,7 +122,9 @@ function onToggleSheet() {
                             class="icon-dist"
                         />
                         <div>
-                            <div class="value">{{ routeDistanceConverted }} {{ distanceUnit }}</div>
+                            <div class="value">
+                                {{ routeDistanceConverted }} {{ distanceUnit }}
+                            </div>
                             <div class="label">Distance</div>
                         </div>
                     </div>

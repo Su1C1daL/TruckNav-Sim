@@ -1,34 +1,31 @@
-import { computed } from "vue"
-import { useSettings } from "~/composables/Settings"
+export const useUnitConversion = () => {
+    const { activeSettings } = useSettings();
 
-const { settings } = useSettings()
-
-export const useConversions = () => {
     const kmToUserUnits = (value: number | null | undefined) => {
-        if (value == null) return 0
-        return settings.value.units === "metric"
+        if (value == null) return 0;
+        return activeSettings.value.units === "metric"
             ? value
-            : value * 0.621371
-        }
-    
-        const literToUserUnits = (value: number | null | undefined) => {
-        if (value == null) return 0
-        return settings.value.units === "metric"
-            ? value 
-            : value * 0.264172
-    }
-    
+            : Math.round(value * 0.621371);
+    };
+
+    const literToUserUnits = (value: number | null | undefined) => {
+        if (value == null) return 0;
+        return activeSettings.value.units === "metric"
+            ? value
+            : Math.round(value * 0.264172);
+    };
+
     const speedUnit = computed(() =>
-        settings.value.units === "metric" ? "km/h" : "mph"
-    )
+        activeSettings.value.units === "metric" ? "km/h" : "mph",
+    );
 
     const distanceUnit = computed(() =>
-        settings.value.units === "metric" ? "km" : "mi"
-    )
+        activeSettings.value.units === "metric" ? "km" : "mi",
+    );
 
     const fuelUnit = computed(() =>
-        settings.value.units === "metric" ? "L" : "gal"
-    )
+        activeSettings.value.units === "metric" ? "L" : "gal",
+    );
 
     return {
         kmToUserUnits,
@@ -37,4 +34,4 @@ export const useConversions = () => {
         distanceUnit,
         fuelUnit,
     };
-}
+};

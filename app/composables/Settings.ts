@@ -6,6 +6,7 @@ export type UnitSystem = "metric" | "imperial";
 export interface GameProfile {
     themeColor: string;
     routeColor: string;
+    units: UnitSystem;
     ownedDlcs: number[];
     lastDestination: [number, number] | null;
 }
@@ -13,7 +14,6 @@ export interface GameProfile {
 export interface AppSettingsState {
     selectedGame: GameType;
     savedIP: string | null;
-    units: UnitSystem;
     profiles: {
         ets2: GameProfile;
         ats: GameProfile;
@@ -23,6 +23,7 @@ export interface AppSettingsState {
 const DEFAULT_PROFILE: GameProfile = {
     themeColor: AppSettings.theme.defaultColor,
     routeColor: "#22d3ee",
+    units: "metric",
     ownedDlcs: Array.from({ length: 10 }, (_, i) => i + 1),
     lastDestination: null,
 };
@@ -30,13 +31,13 @@ const DEFAULT_PROFILE: GameProfile = {
 const DEFAULT_SETTINGS: AppSettingsState = {
     selectedGame: null,
     savedIP: null,
-    units: "metric",
     profiles: {
-        ets2: { ...DEFAULT_PROFILE, themeColor: "#fbc02d" },
+        ets2: { ...DEFAULT_PROFILE, themeColor: "#fbc02d", units: "metric" },
         ats: {
             ...DEFAULT_PROFILE,
             themeColor: "#d32f2f",
             ownedDlcs: Array.from({ length: 16 }, (_, i) => i + 1),
+            units: "imperial",
         },
     },
 };

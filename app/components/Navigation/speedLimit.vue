@@ -1,20 +1,14 @@
 <script lang="ts" setup>
-import { computed } from "vue"
-import { useConversions } from "~/composables/UnitConversion"
-
 const props = defineProps<{
     truckSpeed: number;
     speedLimit: number;
 }>();
 
-const { kmToUserUnits, speedUnit } = useConversions()
-const truckSpeedConverted = computed(() =>
-    Math.round(kmToUserUnits(props.truckSpeed))
-)
+const { kmToUserUnits } = useUnitConversion();
 
-const speedLimitConverted = computed(() =>
-    Math.round(kmToUserUnits(props.speedLimit))
-)
+const truckSpeedConverted = computed(() => kmToUserUnits(props.truckSpeed));
+
+const speedLimitConverted = computed(() => kmToUserUnits(props.speedLimit));
 </script>
 
 <template>

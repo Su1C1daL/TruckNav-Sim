@@ -26,7 +26,7 @@ export const useRouteController = (
     const routeStatsCache = shallowRef<Float32Array | null>(null);
 
     const destinationName = ref<string>("");
-    const routeDistance = ref<string>("");
+    const routeDistance = ref<number>(0);
     const routeEta = ref<string>("");
 
     const savedDestination = ref<[number, number] | null>(null);

@@ -1,16 +1,13 @@
 <script lang="ts" setup>
 import { ets2Expansions } from "~/data/ets2/ets2Expansions";
 import { atsExpansions } from "~/data/ats/atsExpansions";
-import { computed } from "vue"
+
+const { settings, activeSettings, updateProfile } = useSettings();
 
 const props = defineProps<{ closePanel: () => void }>();
 
 const isDlcPanelOpened = ref(false);
-const { settings, activeSettings, updateGlobal } = useSettings();
-const isMetric = computed(() => settings.value.units === "metric")
-const toggleDlcPanel = () => {
-    isDlcPanelOpened.value = !isDlcPanelOpened.value;
-};
+const isMetric = computed(() => activeSettings.value.units === "metric");
 
 const selectedExpansion = computed(() => {
     return settings.value.selectedGame === "ets2"
@@ -18,8 +15,12 @@ const selectedExpansion = computed(() => {
         : atsExpansions;
 });
 
+const toggleDlcPanel = () => {
+    isDlcPanelOpened.value = !isDlcPanelOpened.value;
+};
+
 function toggleUnits() {
-    updateGlobal("units", isMetric.value ? "imperial" : "metric")
+    updateProfile("units", isMetric.value ? "imperial" : "metric");
 }
 </script>
 
@@ -71,17 +72,19 @@ function toggleUnits() {
                 </button>
             </div>
         </div>
+
         <div class="option setting">
             <div class="option-title">
                 <Icon name="lucide:ruler" size="24" />
                 <p>Units</p>
             </div>
-            <div class="owned-dlcs">
-                <button
-                    @click="toggleUnits"
-                    class="unit-toggle"
-                >
-                    {{ isMetric ? "Metric (km/h)" : "Imperial (mph)" }}
+            <div class="segmented-control" @click="toggleUnits">
+                <button class="segment-btn" :class="{ active: isMetric }">
+                    <span class="label">Metric</span>
+                </button>
+
+                <button class="segment-btn" :class="{ active: !isMetric }">
+                    <span class="label">Imperial</span>
                 </button>
             </div>
         </div>
