@@ -12,15 +12,7 @@
     </a>
 </div>
 
-
-> [!NOTE]
-> **Map Support Status**
->
-> Parsing and correcting map data is a manual process. Currently, the map support is as follows:
-> *    **Supported:** Base ETS + ATS Game and all DLCs until 1.58 version.
-> *    **Not Supported (Yet):** Map Mods (e.g. ProMods).
-
-## Current Status: Work in Progress / Demo
+# Current Status: Work in Progress / Demo
 
 Please consider this project a **Demo** or **Alpha**.
 
@@ -30,16 +22,27 @@ While the core navigation works, the project is far from perfect. Creating the r
 * **Routing Quirks:** The `stepCost` (navigation weighting) is still being tweaked. You might notice the GPS taking slightly unusual routes or sometimes favoring a longer path. This can also happen because of missing connections, holes in the road network, or intersections that I missed.
 * **Ongoing Fixes:** As I play the game and use the app, I log coordinates of broken road nodes and fix them in QGIS for future updates.
 * **Known Quirks:** Inside company areas, it may help to move the truck slightly outside before clicking the map to route, as routing may fail otherwise.
-
-> [!IMPORTANT]
-> **Performance Warning**
->
-> Please note that performance optimization is still a work in progress. Depending on your device (especially older tablets or phones), the map rendering might be slow or laggy. I am working on improving this!
+* **Real Company Mods**: If you use mods that change company names, the navigation might get confused. It’s currently built for the default game names.
 
 > [!WARNING]
 > **Dual-Game Setup (ETS2 & ATS)**
 >
 > If you have both Euro Truck Simulator 2 and American Truck Simulator installed, please ensure they are located on the **same drive**. The telemetry server needs to detect both game installations to function correctly; if one is missing or on a separate drive, the application may throw errors during initialization.
+
+# Known Issues & Limitations
+
+> [!CAUTION]
+> **Real Company Name Mods:** If you use mods that change company names (e.g., "Real Company Names"), the navigation will likely fail or route incorrectly. The app is currently optimized for vanilla game identifiers.
+
+### ⚠️ Common Quirks
+*   **Routing Logic:** The `stepCost` is still being tuned. You may see the GPS favor longer paths or take unusual routes due to missing nodes or restricted turns in the map data.
+*   **Company Areas:** GPS routing might fail if you are deep inside a company yard. Try moving your truck slightly toward the exit before setting a destination.
+*   **Map Gaps:** I am manually fixing road segments in QGIS, but some "holes" in the network still exist which can break the pathfinding.
+
+### 📱 Performance & Compatibility
+> [!NOTE]
+>*  **Performance:** Optimization is ongoing. On older tablets or phones, the map rendering may feel laggy. 
+>*  **Map Support:** Currently supports base ETS2/ATS + all DLCs (up to v1.58). ProMods and other map mods are **not** yet supported.
 
 # Installation via .exe File
 
@@ -52,7 +55,7 @@ While the core navigation works, the project is far from perfect. Creating the r
 
 4. Install the .apk file on your tablet or phone.
 
-5. Open the mobile app and enter the IP address displayed in the PC application.
+5. Open the **mobile app** or the **web browser on any device** and enter the IP address displayed in the PC application.
 
 # Instalation via nodejs
 
@@ -121,7 +124,7 @@ To open the app in your browser, click the network link shown in the terminal (t
 ➜ Network: http://192.168.1.x:3000/
 ```
 
-##  How it Works
+#  How it Works
 
 1. **Telemetry:** The app uses a telemetry server to pull data (coordinates, speed, heading) directly from the running game.
 2.  **Mapping:** The in-game coordinates are converted to a standard **WGS84** projection to allow them to work with web mapping libraries.
@@ -131,7 +134,7 @@ To open the app in your browser, click the network link shown in the terminal (t
   <img width="895" height="649" alt="close-up-gps" src="https://github.com/user-attachments/assets/ab0e0baf-bb6e-49d2-b5f0-123277d278dc" />
 </div>
 
-## How You Can Help Improve the Map
+# How You Can Help Improve the Map
 
 If you test the application and encounter broken intersections, missing road connections, roundabout issues, or strange routing behavior, you can help improve the navigation by reporting what you find.
 
@@ -157,7 +160,7 @@ Your reports help refine the routing graph and improve navigation accuracy.
 **Note:**  
 Reported issues will be addressed as time permits.
 
-## Credits & Acknowledgements
+# Credits & Acknowledgements
 
 This project stands on the shoulders of giants. A massive thank you to the following developers who made this possible:
 
