@@ -14,8 +14,7 @@ let package = Package(
         .package(url: "https://github.com/ionic-team/capacitor-swift-pm.git", exact: "8.1.0"),
         .package(name: "CapacitorCommunityKeepAwake", path: "..\..\..\node_modules\@capacitor-community\keep-awake"),
         .package(name: "CapacitorCommunitySafeArea", path: "..\..\..\node_modules\@capacitor-community\safe-area"),
-        .package(name: "CapacitorKeyboard", path: "..\..\..\node_modules\@capacitor\keyboard"),
-        .package(name: "CapacitorPreferences", path: "..\..\..\node_modules\@capacitor\preferences")
+        .package(name: "CapacitorKeyboard", path: "..\..\..\node_modules\@capacitor\keyboard")
     ],
     targets: [
         .target(
@@ -25,8 +24,7 @@ let package = Package(
                 .product(name: "Cordova", package: "capacitor-swift-pm"),
                 .product(name: "CapacitorCommunityKeepAwake", package: "CapacitorCommunityKeepAwake"),
                 .product(name: "CapacitorCommunitySafeArea", package: "CapacitorCommunitySafeArea"),
-                .product(name: "CapacitorKeyboard", package: "CapacitorKeyboard"),
-                .product(name: "CapacitorPreferences", package: "CapacitorPreferences")
+                .product(name: "CapacitorKeyboard", package: "CapacitorKeyboard")
             ]
         )
     ]
