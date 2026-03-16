@@ -20,7 +20,6 @@
         "@capacitor/cli": "^8.1.0",
         "@capacitor/core": "^8.1.0",
         "@capacitor/ios": "^8.0.0",
-        "@capacitor/keyboard": "^8.0.0",
         "@nuxt/devtools": "^3.2.1",
         "@nuxt/icon": "^2.1.0",
         "@nuxt/ui": "^4.4.0",
