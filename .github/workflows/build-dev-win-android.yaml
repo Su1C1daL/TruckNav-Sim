@@ -27,6 +27,9 @@ jobs:
                   npx nuxi build
                   npx nuxi generate
 
+            - name: Sync Capacitor Electron
+              run: npx cap sync electron
+
             - name: Build Windows EXE
               run: |
                   cd electron
