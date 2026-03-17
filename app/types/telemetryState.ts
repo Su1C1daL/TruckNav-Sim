@@ -34,3 +34,7 @@ export interface JobState {
     destinationCity: string;
     destinationCompany: string;
 }
+
+export interface TrailerState {
+    mass: float;
+}
