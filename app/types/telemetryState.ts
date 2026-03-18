@@ -36,5 +36,5 @@ export interface JobState {
 }
 
 export interface TrailerState {
-    mass: float;
+    mass: number;
 }
