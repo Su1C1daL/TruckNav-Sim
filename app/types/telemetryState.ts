@@ -3,6 +3,7 @@ export interface TelemetryUpdate {
     game: GameState;
     general: NavigationState;
     job: JobState;
+    trailer: TrailerState;
 }
 
 export interface GameState {
