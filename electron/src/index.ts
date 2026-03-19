@@ -35,7 +35,8 @@ const trayMenuTemplate: (MenuItemConstructorOptions | MenuItem)[] = [
     new MenuItem({
         label: "Show App",
         click: () => {
-            myCapacitorApp.getMainWindow().show();
+            const win = myCapacitorApp.getMainWindow();
+            if (win) win.show();
         },
     }),
 
@@ -95,7 +96,7 @@ if (electronIsDev) {
     const mainWindow = myCapacitorApp.getMainWindow() as any;
 
     if (mainWindow) {
-        mainWindow.on("close", (event) => {
+        mainWindow.on("close", (event: Electron.Event) => {
             if (!(app as any).isQuitting) {
                 event.preventDefault();
                 mainWindow.hide();
@@ -122,7 +123,8 @@ app.on("window-all-closed", function () {
 app.on("activate", async function () {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (myCapacitorApp.getMainWindow().isDestroyed()) {
+    const win = myCapacitorApp.getMainWindow();
+    if (win && win.isDestroyed()) {
         await myCapacitorApp.init();
     }
 });
@@ -420,15 +422,17 @@ ipcMain.on(
     (_event, { width, height, resizable, maximize }) => {
         const win = myCapacitorApp.getMainWindow();
 
-        if (!maximize) {
-            win.unmaximize();
-            win.setResizable(true);
-            win.setSize(width, height);
-            win.setResizable(resizable);
-            win.center();
-        } else {
-            win.setResizable(true);
-            win.maximize();
+        if (win) {
+            if (!maximize) {
+                win.unmaximize();
+                win.setResizable(true);
+                win.setSize(width, height);
+                win.setResizable(resizable);
+                win.center();
+            } else {
+                win.setResizable(true);
+                win.maximize();
+            }
         }
     },
 );
@@ -436,5 +440,3 @@ ipcMain.on(
 ipcMain.on("manual-start-server", () => {
     startTelemetryServer();
 });
-
-//#endregion
